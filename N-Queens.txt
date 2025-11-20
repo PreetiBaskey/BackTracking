@@ -1,0 +1,100 @@
+//approach - 1
+// class Solution {
+// public:
+//     int N;
+//     vector<vector<string>> result;
+//     bool isValid(vector<string> &board, int i, int j) {
+//         //upward
+//         for(int row = i - 1; row >= 0; row--) {
+//             if(board[row][j] == 'Q') {
+//                 return false;
+//             }
+//         }
+//         //diagonal left upward
+//         for(int row = i - 1, col = j - 1; row >= 0 && col >= 0; row--, col--) {
+//             if(board[row][col] == 'Q') {
+//                 return false;
+//             }
+//         }
+//         //diagonal right upward
+//         for(int row = i - 1, col = j + 1; row >= 0 && col >= 0; row--, col++) {
+//             if(board[row][col] == 'Q') {
+//                 return false;
+//             }
+//         }
+
+//         return true;
+//     }
+//     void find(vector<string> &board, int row) {
+//         if(row >= N) {
+//             result.push_back(board);
+//             return;
+//         }
+
+//         for(int col = 0; col < N; col++) {
+//             if(isValid(board, row, col)) {
+//                 //do
+//                 board[row][col] = 'Q';
+
+//                 //get solution(s)
+//                 find(board, row + 1);
+
+//                 //undo
+//                 board[row][col] = '.';
+//             }
+//         }
+//     }
+//     vector<vector<string>> solveNQueens(int n) {
+//         N = n;
+//         vector<string> board(n, string(n, '.'));
+
+//         int row = 0;
+//         find(board, row);
+
+//         return result;
+//     }
+// };
+
+//approach - 2
+class Solution {
+public:
+    int N;
+    vector<vector<string>> result;
+    unordered_set<int> columns;
+    unordered_set<int> diagonals;
+    unordered_set<int> antidiagonals;
+    void find(vector<string> &board, int row) {
+        if(row >= N) {
+            result.push_back(board);
+            return;
+        }
+
+        for(int col = 0; col < N; col++) {
+            if(!columns.count(col) && !diagonals.count(row + col) && !antidiagonals.count(row - col)) {
+                //do
+                board[row][col] = 'Q';
+                columns.insert(col);
+                diagonals.insert(row + col);
+                antidiagonals.insert(row - col);
+
+                //get solution(s)
+                find(board, row + 1);
+
+                //undo
+                board[row][col] = '.';
+                columns.erase(col);
+                diagonals.erase(row + col);
+                antidiagonals.erase(row - col);
+            }
+        }
+    }
+    vector<vector<string>> solveNQueens(int n) {
+        N = n;
+        vector<string> board(n, string(n, '.'));
+
+        int row = 0;
+        find(board, row);
+
+        return result;
+    }
+};
