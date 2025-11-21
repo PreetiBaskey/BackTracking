@@ -1,0 +1,58 @@
+class Solution {
+public:
+    bool isValid(vector<vector<char>> &board, int row, int col, char d) {
+        for(int i = 0; i < 9; i++) {
+            //check in each row, if d exist
+            if(board[row][i] == d) {
+                return false;
+            }
+            //check in each column, if d exist
+            if(board[i][col] == d) {
+                return false;
+            }
+
+            //check in each 3x3 box, if d exist
+            int starti = (row/3) * 3;
+            int startj = (col/3) * 3;
+
+            for(int i = 0; i < 3; i++) {
+                for(int j = 0; j < 3; j++) {
+                    if(board[starti + i][startj + j] == d) {
+                        return false;
+                    }
+                }
+            }
+        }
+
+        return true;
+    }
+    bool solve(vector<vector<char>> &board) {
+        for(int i = 0; i < 9; i++) {
+            for(int j = 0; j < 9; j++) {
+                if(board[i][j] == '.') {
+                    //d - digit
+                    for(char d = '1'; d <= '9'; d++) {
+                        if(isValid(board, i, j, d)) {
+                            //do
+                            board[i][j] = d;
+
+                            //explore
+                            if(solve(board) == true) {
+                                return true;
+                            }
+
+                            //undo
+                            board[i][j] = '.';
+                        }
+                    }
+                    return false;
+                }
+            }
+        }
+
+        return true;
+    }
+    void solveSudoku(vector<vector<char>>& board) {
+        solve(board);
+    }
+};
