@@ -1,0 +1,58 @@
+class Solution {
+public:
+    int getMinRemoval(string s) {
+        stack<char> st;
+        int n = s.length();
+        for(int i = 0; i < n; i++) {
+            if(s[i] == '(') {
+                st.push('(');
+            }
+            else if(s[i] == ')') {
+                if(st.size() == 0) {
+                    st.push(')');
+                }
+                else if(st.top() == '(') {
+                    st.pop();
+                }
+                else if(st.size() != 0 && st.top() == ')') {
+                    st.push(')');
+                }
+            }
+        }
+
+        return st.size();
+    }
+    //mr - minRemoval
+    void solve(string str, int mr, unordered_set<string> &mp, vector<string> &result) {
+        if(mr < 0) {
+            return;
+        }
+        if(mp.count(str)) return;
+        mp.insert(str);
+        if(mr == 0) {
+            if(getMinRemoval(str) == 0) {
+                result.push_back(str);
+            }
+            return;
+        }
+        int n = str.length();
+        for(int i = 0; i < n; i++) {
+            string left = str.substr(0, i);
+            string right = str.substr(i + 1);
+            string newString = left + right;
+            solve(newString, mr - 1, mp, result);
+        }
+
+        return;
+    }
+    vector<string> removeInvalidParentheses(string s) {
+        int n = s.length();
+        int minRemoval = getMinRemoval(s);
+        unordered_set<string> mp;
+        vector<string> result;
+
+        solve(s, minRemoval, mp, result);
+
+        return result;
+    }
+};
