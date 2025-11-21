@@ -1,0 +1,35 @@
+class Solution {
+public:
+    int K;
+    int result;
+    void dfs(vector<int> &nums, unordered_map<int, int> &mp, int idx) {
+        if(idx == nums.size()) {
+            result++;
+            return;
+        }
+
+        //not take
+        dfs(nums, mp, idx + 1);
+
+        //take
+        if(!mp[nums[idx] + K] && !mp[nums[idx] - K]) {
+            //do
+            mp[nums[idx]]++;
+
+            //explore
+            dfs(nums, mp, idx + 1);
+
+            //undo
+            mp[nums[idx]]--;
+        }
+    }
+    int beautifulSubsets(vector<int>& nums, int k) {
+        result = 0;
+        K = k;
+        unordered_map<int, int> mp;
+
+        dfs(nums, mp, 0);
+
+        return result - 1;
+    }
+};
