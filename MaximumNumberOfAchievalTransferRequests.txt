@@ -1,0 +1,40 @@
+class Solution {
+public:
+    int result = INT_MIN;
+    int buildingsNo;
+    void dfs(vector<vector<int>> &requests, vector<int> &buildings, int idx, int taken) {
+        if(idx == requests.size()) {
+            for(int i = 0; i < buildingsNo; i++) {
+                if(buildings[i] != 0) {
+                    return;
+                }
+            }
+            result = max(result, taken);
+            return;
+        }
+
+        auto via = requests[idx];
+        int from = via[0];
+        int to = via[1];
+
+        //take
+        buildings[from] -= 1;
+        buildings[to] += 1;
+        dfs(requests, buildings, idx + 1, taken + 1);
+
+        //not take
+        buildings[from] += 1;
+        buildings[to] -= 1;
+        dfs(requests, buildings, idx + 1, taken);
+    }
+    int maximumRequests(int n, vector<vector<int>>& requests) {
+        buildingsNo = n;
+        vector<int> buildings(n, 0);
+
+        int idx = 0;
+        int taken = 0;
+        dfs(requests, buildings, 0, taken);
+
+        return result;
+    }
+};
