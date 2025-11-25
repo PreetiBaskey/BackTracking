@@ -1,0 +1,38 @@
+class Solution {
+public:
+    int n;
+    void backtrack(vector<int> &nums, vector<vector<int>> &result, vector<int> &curr, int idx) {
+        if(curr.size() >= 2) {
+            result.push_back(curr);
+        }
+
+        unordered_set<int> st;
+
+        for(int i = idx; i < nums.size(); i++) {
+            if((curr.empty() || curr.back() <= nums[i]) && st.find(nums[i]) == st.end()) {
+                //do
+                curr.push_back(nums[i]);
+
+                //explore
+                backtrack(nums, result, curr, i + 1);
+
+                //undo
+                curr.pop_back();
+
+                //include the element, that, it is used already
+                st.insert(nums[i]);
+            }
+        }
+
+    }
+    vector<vector<int>> findSubsequences(vector<int>& nums) {
+        n = nums.size();
+        vector<int> curr;
+        vector<vector<int>> result;
+        int idx = 0;
+
+        backtrack(nums, result, curr, idx);
+
+        return result;
+    }
+};
