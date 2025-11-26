@@ -1,0 +1,50 @@
+class Solution {
+public:
+    int result;
+    void backtrack(vector<string> &words, unordered_map<char, int> &mp, vector<int> &score, int tempScore, int idx) {
+        result = max(result, tempScore);
+        if(idx == words.size()) {
+            return;
+        }
+
+        string word = words[idx];
+        int n = word.size();
+        int currScore = 0;
+        unordered_map<char, int> currMp = mp;
+
+        int i = 0;
+        while(i < n) {
+            char ch = word[i];
+            currMp[ch]--;
+            currScore += score[ch - 'a'];
+
+            if(currMp[ch] < 0) {
+                break;
+            }
+
+            i++;
+        }
+        if(i == n) {
+            backtrack(words, currMp, score, tempScore + currScore, idx + 1);
+        }
+
+        
+        backtrack(words, mp, score, tempScore, idx + 1);
+
+    }
+    int maxScoreWords(vector<string>& words, vector<char>& letters, vector<int>& score) {
+        result = 0;
+        unordered_map<char, int> mp;
+
+        for(char &ch: 
+        letters) {
+            mp[ch]++;
+        }
+        
+        int idx = 0;
+        int tempScore = 0;
+        backtrack(words, mp, score, tempScore, idx);
+
+        return result;
+    }
+};
