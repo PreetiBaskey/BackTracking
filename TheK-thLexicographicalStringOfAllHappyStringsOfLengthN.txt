@@ -1,0 +1,29 @@
+class Solution {
+public:
+    void backtrack(vector<string> &result, string &temp, int n) {
+        if(temp.size() == n) {
+            result.push_back(temp);
+            return;
+        }
+        for(char ch = 'a'; ch <= 'c'; ch++) {
+            if(!temp.empty() && temp.back() == ch) {
+                continue;
+            }
+            temp.push_back(ch);
+            backtrack(result, temp, n);
+            temp.pop_back();
+        }        
+    }
+    string getHappyString(int n, int k) {
+        string temp = "";
+        vector<string> result;
+
+        backtrack(result, temp, n);
+
+        if(k > result.size()) {
+            return "";
+        }
+
+        return result[k - 1];
+    }
+};
