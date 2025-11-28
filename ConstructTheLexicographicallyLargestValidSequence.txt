@@ -1,0 +1,48 @@
+class Solution {
+public:
+    bool backtrack(int i, int n, vector<int> &result, vector<int> &used) {
+        if(i >= result.size()) {
+            return true;
+        }
+        if(result[i] != -1) {
+            return backtrack(i + 1, n, result, used);
+        }
+
+        for(int num = n; num >= 1; num--) {
+            if(used[num]) {
+                continue;
+            }
+            used[num] = 1;
+            result[i] = num;
+
+            if(num == 1) {
+                if(backtrack(i + 1, n, result, used) == true) {
+                    return true;
+                }
+            }
+            else {
+                int j = i + result[i];
+                if(j < result.size() && result[j] == -1) {
+                    result[j] = num;
+                    if(backtrack(i + 1, n, result, used) == true) {
+                        return true;
+                    }
+                    result[j] = -1;
+                }
+            }
+
+            used[num] = 0;
+            result[i] = -1;
+        }
+
+        return false;
+    }
+    vector<int> constructDistancedSequence(int n) {
+        vector<int> result(2*n-1, -1);
+        vector<int> used(n + 1, 0);
+
+        backtrack(0, n, result, used);
+
+        return result;
+    }
+};
