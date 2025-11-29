@@ -1,0 +1,24 @@
+class Solution {
+public:
+    void backtrack(vector<int> &nums, vector<vector<int>> &result, vector<int> &curr, int idx) {
+        if(idx == nums.size()) {
+            result.push_back(curr);
+            return;
+        }
+
+        curr.push_back(nums[idx]);
+        backtrack(nums, result, curr, idx + 1);
+
+        curr.pop_back();
+        backtrack(nums,result, curr, idx + 1);
+    }
+    vector<vector<int>> subsets(vector<int>& nums) {
+        vector<vector<int>> result;
+        vector<int> curr;
+        int idx = 0;
+
+        backtrack(nums, result, curr, idx);
+
+        return result;
+    }
+};
