@@ -1,0 +1,42 @@
+class Solution {
+public:
+    void backtrack(vector<int> &nums, vector<int> &visited, vector<vector<int>> &result, vector<int> &curr) {
+        if(curr.size() == nums.size()) {
+            result.push_back(curr);
+            return;
+        }
+
+        for(int i = 0; i < nums.size(); i++) {
+             if(visited[i]) {
+                continue;
+             }
+            // Correct duplicate handling for permutations:
+            // If the current number is the same as the previous one, 
+            // and the previous one hasn't been used yet in THIS loop/level, skip it.
+             if(i > 0 && nums[i] == nums[i - 1] && !visited[i - 1]) {
+                continue;
+             }
+
+            //do
+            visited[i] = 1;
+            curr.push_back(nums[i]);
+
+            //explore
+            backtrack(nums, visited, result, curr);
+
+            //undo
+            visited[i] = 0;
+            curr.pop_back();
+        }
+    }
+    vector<vector<int>> permuteUnique(vector<int>& nums) {
+        sort(nums.begin(), nums.end()); // Essential: Sort the array
+        vector<vector<int>> result;
+        vector<int> curr;
+        vector<int> visited(nums.size(), 0);
+
+        backtrack(nums, visited, result, curr);
+
+        return result;
+    }
+};                      
